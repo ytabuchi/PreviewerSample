@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
+		xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+		xmlns:design="clr-namespace:PreviewerSample;assembly=PreviewerSample"
+		xmlns:controls="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin.Abstractions"
+		xmlns:local="clr-namespace:PreviewerSample.Helper;assembly=PreviewerSample"
+		BindingContext="{x:Static design:ViewModelLocator.PersonsViewModel}"
+		x:Class="PreviewerSample.Views.PreviewPage"
+		Title="Previewer Sample">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style x:Key="nameStyle" TargetType="Label">
+				<Setter Property="HorizontalOptions" Value="StartAndExpand"/>
+				<Setter Property="TextColor">
+					<Setter.Value>
+						<OnPlatform x:TypeArguments="Color"
+								iOS="#B765B8"
+								Android="#3498DB"/>
+					</Setter.Value>
+				</Setter>
+				<Setter Property="FontSize" Value="20"/>
+			</Style>
+			<Style x:Key="detailStyle" TargetType="Label">
+				<Setter Property="FontSize" Value="14"/>
+				<Setter Property="VerticalTextAlignment" Value="End"/>
+				<Setter Property="TextColor" Value="Gray"/>
+				<Setter Property="HorizontalOptions" Value="End"/>
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+	<ContentPage.Content>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+			</Grid.RowDefinitions>
+
+			<StackLayout Orientation="Horizontal" 
+					Padding="10">
+				<Entry Placeholder="Input number"
+						Text="{Binding FilterNumber}">
+					<Entry.Behaviors>
+						<local:NumericValidationBehavior/>
+					</Entry.Behaviors>
+				</Entry>
+				<Button Text="Filter" 
+						HorizontalOptions="CenterAndExpand"
+						Command="{Binding FilterCommand}"/>
+			</StackLayout>
+
+			<Label Grid.Row="1"
+					Text="{Binding PersonCount, StringFormat='{0}名'}"
+					Margin="10, 5, 20, 0"/>
+
+			<ListView Grid.Row="2" ItemsSource="{Binding Persons}"
+					HasUnevenRows="true">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<Grid Padding="17, 10" RowSpacing="10" ColumnSpacing="5">
+                        		<Grid.RowDefinitions>
+									<RowDefinition Height="Auto"/>
+									<RowDefinition Height="*"/>
+                        		</Grid.RowDefinitions>
+                        		<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto"/>
+									<ColumnDefinition Width="*"/>
+								</Grid.ColumnDefinitions>
+
+								<controls:CircleImage 
+										BorderThickness="2"
+										Source="{Binding Photo}" 
+										HeightRequest="65" 
+										WidthRequest="65" 
+										Grid.RowSpan="2">
+									<controls:CircleImage.BorderColor>
+										<OnPlatform x:TypeArguments="Color"
+												iOS="#B765B8"
+												Android="#3498DB"/>
+										</controls:CircleImage.BorderColor>
+								</controls:CircleImage>
+								<StackLayout Grid.Row="0" 
+										Grid.Column="1"
+										Orientation="Horizontal">
+									<Label Text="{Binding Name}"
+											Style="{StaticResource nameStyle}"/>  
+									<Label Text="{Binding Department}" 
+											FontSize="13" 
+											HorizontalOptions="End" 
+											VerticalTextAlignment="End"/>
+								</StackLayout>
+								<StackLayout Grid.Row="1"
+										Grid.Column="1"
+										Orientation="Horizontal">
+									<Label Text="{Binding City}" 
+											FontSize="14"
+											VerticalTextAlignment="End"
+											HorizontalOptions="StartAndExpand"/>
+									<Label Text="{Binding Followers, StringFormat='Followers: {0}'}"
+											Style="{StaticResource detailStyle}"/>
+									<Label Text="{Binding Age, StringFormat='{0}歳'}"
+											Style="{StaticResource detailStyle}"/>
+								</StackLayout>
+
+							</Grid>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</Grid>
+	</ContentPage.Content>
+</ContentPage>
